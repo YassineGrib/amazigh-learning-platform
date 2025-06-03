@@ -1,27 +1,71 @@
 {
   "name": "amazigh-learning-platform",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "private": false,
+  "description": "A comprehensive web-based platform for learning the Amazigh (Berber) language with AI integration. Features interactive lessons, Tifinagh script learning, and cultural immersion.",
+  "keywords": [
+    "amazigh",
+    "berber",
+    "language-learning",
+    "tifinagh",
+    "education",
+    "north-africa",
+    "kabyle",
+    "tarifit",
+    "tashelhit",
+    "chaoui",
+    "cultural-preservation"
+  ],
+  "author": {
+    "name": "Amazigh Learning Platform Team",
+    "email": "contact@amazigh-learning.com",
+    "url": "https://amazigh-learning.com"
+  },
+  "license": "MIT",
+  "homepage": "https://amazigh-learning.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amazigh-learning/platform.git"
+  },
+  "bugs": {
+    "url": "https://github.com/amazigh-learning/platform/issues"
+  },
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "type-check": "tsc --noEmit",
+    "export": "next export",
+    "deploy": "npm run build && npm run export",
+    "preview": "npm run build && npm run start",
+    "clean": "rm -rf .next out",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.59.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.460.0",
+    "next": "15.3.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.3.3"
+    "react-hot-toast": "^2.4.1",
+    "react-type-animation": "^3.2.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
+    "@tanstack/react-query-devtools": "^5.59.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
+    "autoprefixer": "^10.4.21",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
-    "@eslint/eslintrc": "^3"
+    "postcss": "^8.4.0",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5"
   }
 }

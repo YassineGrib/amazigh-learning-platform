@@ -1,26 +1,229 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Amazigh Learning Platform Custom Styles */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.6;
+    color: #374151;
+    background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-weight: 600;
+    color: #111827;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+
+  /* Custom component styles using Tailwind's @apply */
+  .btn-primary {
+    @apply bg-blue-500 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 border-0 cursor-pointer inline-flex items-center hover:bg-blue-600;
+  }
+
+  .btn-outline {
+    @apply border-2 border-blue-500 text-blue-500 bg-transparent font-medium px-4 py-2 rounded-lg transition-all duration-200 cursor-pointer inline-flex items-center hover:bg-blue-500 hover:text-white;
+  }
+
+  /* Animated border button for AI Chat */
+  .btn-animated-border {
+    position: relative;
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 0.5rem;
+    padding: 0.75rem 2rem;
+    font-weight: 500;
+    color: #3b82f6;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .btn-animated-border::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 0.5rem;
+    padding: 2px;
+    background: linear-gradient(45deg, #3b82f6, #22c55e, #eab308, #3b82f6);
+    background-size: 300% 300%;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: xor;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    animation: borderRotate 3s linear infinite;
+  }
+
+  .btn-animated-border:hover {
+    color: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
+  }
+
+  .btn-animated-border:hover::before {
+    animation-duration: 1s;
+  }
+
+  @keyframes borderRotate {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* Alternative animated border with rotating gradient */
+  .btn-gradient-border {
+    position: relative;
+    background: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem 2rem;
+    font-weight: 500;
+    color: #3b82f6;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    z-index: 1;
+  }
+
+  .btn-gradient-border::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #3b82f6, #22c55e, #eab308, #ef4444, #8b5cf6, #3b82f6);
+    background-size: 400% 400%;
+    border-radius: 0.5rem;
+    z-index: -1;
+    animation: gradientRotate 4s ease infinite;
+  }
+
+  .btn-gradient-border:hover {
+    color: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+  }
+
+  .btn-gradient-border:hover::before {
+    animation-duration: 2s;
+  }
+
+  @keyframes gradientRotate {
+    0% {
+      background-position: 0% 50%;
+    }
+    25% {
+      background-position: 100% 50%;
+    }
+    50% {
+      background-position: 100% 100%;
+    }
+    75% {
+      background-position: 50% 100%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-lg border border-gray-100 p-6 transition-shadow duration-200 hover:shadow-xl;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg transition-colors duration-200 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200;
+  }
+
+  /* Navigation styles */
+  .nav-link {
+    @apply flex items-center px-4 py-2 text-gray-700 rounded-lg transition-all duration-200 hover:bg-blue-50 hover:text-blue-600;
+  }
+
+  .nav-link-active {
+    @apply bg-blue-100 text-blue-700 font-medium;
+  }
+
+  /* Text gradient utility */
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent;
+  }
+
+  /* Tifinagh letters styling */
+  .tifinagh-letters {
+    font-family: 'Noto Sans Tifinagh', 'Segoe UI Symbol', 'Arial Unicode MS', sans-serif;
+    letter-spacing: 0.2em;
+    text-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+  }
+
+  /* Typing animation cursor */
+  .typing-cursor {
+    animation: blink 1s infinite;
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+
+  /* Progress bar styles */
+  .progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+
+  /* Interactive card hover effect */
+  .card-interactive {
+    transition: all 0.3s ease;
+  }
+
+  .card-interactive:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+}
+
+@layer utilities {
+  /* Additional utility classes */
+  .font-display {
+    font-family: var(--font-poppins), Poppins, system-ui, sans-serif;
+  }
 }

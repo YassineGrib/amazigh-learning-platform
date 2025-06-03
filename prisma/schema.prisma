@@ -1,0 +1,180 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  progress      UserProgress?
+  quizAttempts  QuizAttempt[]
+  flashcards    Flashcard[]
+  chatSessions  ChatSession[]
+
+  @@map("users")
+}
+
+model UserProgress {
+  id                     String           @id @default(cuid())
+  userId                 String           @unique
+  currentLevel           ProficiencyLevel @default(BEGINNER)
+  totalLessonsCompleted  Int              @default(0)
+  totalQuizzesCompleted  Int              @default(0)
+  totalVocabularyLearned Int              @default(0)
+  streakDays             Int              @default(0)
+  lastActiveDate         DateTime         @default(now())
+  dialectPreference      AmazighDialect?
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_progress")
+}
+
+model Lesson {
+  id          String           @id @default(cuid())
+  title       String
+  description String
+  content     String
+  level       ProficiencyLevel
+  dialect     AmazighDialect
+  order       Int
+  duration    Int // in minutes
+  audioUrl    String?
+  videoUrl    String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  // Relations
+  quizzes Quiz[]
+
+  @@map("lessons")
+}
+
+model Quiz {
+  id           String        @id @default(cuid())
+  lessonId     String
+  title        String
+  questions    String // JSON string of QuizQuestion[]
+  passingScore Int
+  timeLimit    Int? // in minutes
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  // Relations
+  lesson    Lesson        @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  attempts  QuizAttempt[]
+
+  @@map("quizzes")
+}
+
+model QuizAttempt {
+  id          String   @id @default(cuid())
+  userId      String
+  quizId      String
+  answers     String // JSON string of QuizAnswer[]
+  score       Int
+  completedAt DateTime @default(now())
+  timeSpent   Int // in seconds
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@map("quiz_attempts")
+}
+
+model VocabularyWord {
+  id           String             @id @default(cuid())
+  amazighWord  String
+  translation  String
+  pronunciation String?
+  audioUrl     String?
+  imageUrl     String?
+  category     VocabularyCategory
+  dialect      AmazighDialect
+  difficulty   ProficiencyLevel
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  // Relations
+  flashcards Flashcard[]
+
+  @@map("vocabulary_words")
+}
+
+model Flashcard {
+  id               String   @id @default(cuid())
+  userId           String
+  vocabularyWordId String
+  repetitionCount  Int      @default(0)
+  easeFactor       Float    @default(2.5)
+  interval         Int      @default(1)
+  nextReviewDate   DateTime @default(now())
+  lastReviewedAt   DateTime?
+  isLearned        Boolean  @default(false)
+
+  // Relations
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vocabularyWord VocabularyWord @relation(fields: [vocabularyWordId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, vocabularyWordId])
+  @@map("flashcards")
+}
+
+model ChatSession {
+  id        String         @id @default(cuid())
+  userId    String
+  title     String
+  messages  String // JSON string of ChatMessage[]
+  topic     String?
+  dialect   AmazighDialect
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("chat_sessions")
+}
+
+// Enums
+enum ProficiencyLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum AmazighDialect {
+  KABYLE
+  CHAOUI
+  MOZABITE
+  TARIFIT
+  TASHELHIT
+}
+
+enum VocabularyCategory {
+  FAMILY
+  FOOD
+  WORK
+  TRAVEL
+  GREETINGS
+  NUMBERS
+  COLORS
+  ANIMALS
+  NATURE
+  DAILY_LIFE
+}
