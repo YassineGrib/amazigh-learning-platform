@@ -53,7 +53,7 @@ export default function SettingsPage() {
     { id: 'INTENSIVE', name: 'Intensive Study', description: '60+ minutes per day' }
   ];
 
-  const handleSettingChange = (key: string, value: any) => {
+  const handleSettingChange = (key: string, value: unknown) => {
     setSettings(prev => ({
       ...prev,
       [key]: value

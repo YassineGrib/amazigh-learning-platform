@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { RotateCcw, Volume2, Star, CheckCircle, X, ArrowLeft, ArrowRight } from 'lucide-react';
+import { RotateCcw, Volume2, CheckCircle, X, ArrowLeft, ArrowRight } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface FlashcardData {

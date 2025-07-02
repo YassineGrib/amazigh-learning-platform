@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { 
   TrendingUp, 
-  Calendar, 
-  Target, 
+  // Calendar, 
+  // Target, 
   Award, 
   BookOpen, 
   MessageCircle, 

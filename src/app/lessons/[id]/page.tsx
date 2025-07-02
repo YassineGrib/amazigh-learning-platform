@@ -1,18 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { 
-  ArrowLeft, 
-  Play, 
-  Pause, 
-  RotateCcw, 
-  CheckCircle, 
-  Volume2,
-  BookOpen,
-  MessageCircle,
-  Award
-} from 'lucide-react';
+import { ArrowLeft, CheckCircle, Volume2 } from 'lucide-react';
 
 interface LessonContent {
   id: string;
@@ -28,14 +18,14 @@ interface LessonSection {
   id: string;
   type: 'vocabulary' | 'grammar' | 'practice' | 'audio';
   title: string;
-  content: any;
+  content: unknown;
 }
 
 export default function LessonDetailPage() {
   const params = useParams();
   const router = useRouter();
   const [currentSection, setCurrentSection] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
+  // const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
 
   // Sample lesson content - in a real app, this would come from an API
@@ -161,89 +151,93 @@ export default function LessonDetailPage() {
           </div>
 
           {/* Vocabulary Section */}
-          {currentSectionData.type === 'vocabulary' && (
-            <div className="space-y-6">
-              <p className="text-lg text-gray-700 leading-relaxed">
-                {currentSectionData.content.text}
-              </p>
-              
-              {currentSectionData.content.letters && (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {currentSectionData.content.letters.map((letter: any, index: number) => (
-                    <div key={index} className="card text-center p-6">
-                      <div className="text-4xl font-bold text-amazigh-blue-600 mb-2 tifinagh-letters">
-                        {letter.symbol}
-                      </div>
-                      <div className="text-lg font-semibold text-gray-900 mb-1">
-                        {letter.name}
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        Sound: "{letter.sound}"
-                      </div>
-                      <button className="mt-2 p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                        <Volume2 className="w-4 h-4 text-gray-500" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {currentSectionData.content.words && (
-                <div className="space-y-4">
-                  {currentSectionData.content.words.map((word: any, index: number) => (
-                    <div key={index} className="card p-6">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-6">
-                          <div className="text-3xl font-bold text-amazigh-blue-600 tifinagh-letters">
-                            {word.tifinagh}
-                          </div>
-                          <div>
-                            <div className="text-xl font-semibold text-gray-900">
-                              {word.latin}
-                            </div>
-                            <div className="text-gray-600">
-                              {word.meaning}
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              Pronunciation: {word.pronunciation}
-                            </div>
-                          </div>
+          {currentSectionData.type === 'vocabulary' && (() => {
+            const content = currentSectionData.content as { text?: string; letters?: { symbol: string; name: string; sound: string }[]; words?: { tifinagh: string; latin: string; meaning: string; pronunciation: string }[] };
+            return (
+              <div className="space-y-6">
+                <p className="text-lg text-gray-700 leading-relaxed">
+                  {content.text}
+                </p>
+                {content.letters && (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {content.letters.map((letter, index) => (
+                      <div key={index} className="card text-center p-6">
+                        <div className="text-4xl font-bold text-amazigh-blue-600 mb-2 tifinagh-letters">
+                          {letter.symbol}
                         </div>
-                        <button className="p-3 hover:bg-gray-100 rounded-lg transition-colors">
-                          <Volume2 className="w-5 h-5 text-gray-500" />
+                        <div className="text-lg font-semibold text-gray-900 mb-1">
+                          {letter.name}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          Sound: &quot;{letter.sound}&quot;
+                        </div>
+                        <button className="mt-2 p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                          <Volume2 className="w-4 h-4 text-gray-500" />
                         </button>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+                    ))}
+                  </div>
+                )}
+                {content.words && (
+                  <div className="space-y-4">
+                    {content.words.map((word, index) => (
+                      <div key={index} className="card p-6">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-6">
+                            <div className="text-3xl font-bold text-amazigh-blue-600 tifinagh-letters">
+                              {word.tifinagh}
+                            </div>
+                            <div>
+                              <div className="text-xl font-semibold text-gray-900">
+                                {word.latin}
+                              </div>
+                              <div className="text-gray-600">
+                                {word.meaning}
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                Pronunciation: {word.pronunciation}
+                              </div>
+                            </div>
+                          </div>
+                          <button className="p-3 hover:bg-gray-100 rounded-lg transition-colors">
+                            <Volume2 className="w-5 h-5 text-gray-500" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
 
           {/* Practice Section */}
-          {currentSectionData.type === 'practice' && (
-            <div className="space-y-6">
-              <p className="text-lg text-gray-700">
-                {currentSectionData.content.instructions}
-              </p>
-              <div className="bg-amazigh-blue-50 rounded-lg p-6">
-                <div className="text-center">
-                  <div className="text-sm text-gray-600 mb-4">Click the letter that makes the sound:</div>
-                  <div className="text-2xl font-bold text-amazigh-blue-600 mb-6">"a"</div>
-                  <div className="flex justify-center space-x-4">
-                    {['ⴰ', 'ⴱ', 'ⴳ'].map((letter, index) => (
-                      <button
-                        key={index}
-                        className="w-16 h-16 bg-white rounded-lg shadow-md hover:shadow-lg transition-all text-2xl font-bold text-amazigh-blue-600 tifinagh-letters"
-                      >
-                        {letter}
-                      </button>
-                    ))}
+          {currentSectionData.type === 'practice' && (() => {
+            const content = currentSectionData.content as { instructions?: string };
+            return (
+              <div className="space-y-6">
+                <p className="text-lg text-gray-700">
+                  {content.instructions}
+                </p>
+                <div className="bg-amazigh-blue-50 rounded-lg p-6">
+                  <div className="text-center">
+                    <div className="text-sm text-gray-600 mb-4">Click the letter that makes the sound:</div>
+                    <div className="text-2xl font-bold text-amazigh-blue-600 mb-6">&quot;a&quot;</div>
+                    <div className="flex justify-center space-x-4">
+                      {['ⴰ', 'ⴱ', 'ⴳ'].map((letter, index) => (
+                        <button
+                          key={index}
+                          className="w-16 h-16 bg-white rounded-lg shadow-md hover:shadow-lg transition-all text-2xl font-bold text-amazigh-blue-600 tifinagh-letters"
+                        >
+                          {letter}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* Navigation */}
           <div className="flex justify-between items-center mt-8 pt-6 border-t">

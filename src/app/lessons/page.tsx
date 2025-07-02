@@ -340,7 +340,7 @@ export default function LessonsPage() {
                 {levels.map((level) => (
                   <button
                     key={level.id}
-                    onClick={() => setSelectedLevel(level.id as any)}
+                    onClick={() => setSelectedLevel(level.id as 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED')}
                     className={clsx(
                       'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
                       selectedLevel === level.id

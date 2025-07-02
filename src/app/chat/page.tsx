@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, MessageCircle, Bot, User, Mic, Volume2 } from 'lucide-react';
+import { Send, Bot, User, Mic, Volume2 } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface Message {
@@ -72,7 +72,7 @@ export default function ChatPage() {
       const aiResponse: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: generateAIResponse(inputMessage),
+        content: generateAIResponse(),
         timestamp: new Date(),
       };
       setMessages(prev => [...prev, aiResponse]);
@@ -80,7 +80,7 @@ export default function ChatPage() {
     }, 1000);
   };
 
-  const generateAIResponse = (userInput: string): string => {
+  const generateAIResponse = (): string => {
     // Simple mock responses - in a real app, this would be handled by your AI backend
     const responses = [
       'That\'s great! In Kabyle, we would say "Yelha!" which means "That\'s good!" Can you try repeating that?',
@@ -93,7 +93,7 @@ export default function ChatPage() {
   };
 
   const handleTopicClick = (topic: string) => {
-    setInputMessage(`I'd like to practice talking about ${topic.toLowerCase()}`);
+    setInputMessage(`I&apos;d like to practice talking about ${topic.toLowerCase()}`);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -158,7 +158,7 @@ export default function ChatPage() {
             <h4 className="font-medium text-amazigh-blue-900 mb-2">Tips for Practice</h4>
             <ul className="text-sm text-amazigh-blue-700 space-y-1">
               <li>• Start with simple phrases</li>
-              <li>• Don't worry about mistakes</li>
+              <li>• Don&apos;t worry about mistakes</li>
               <li>• Ask for pronunciation help</li>
               <li>• Practice daily conversations</li>
             </ul>

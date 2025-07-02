@@ -8,7 +8,7 @@ import {
   CreditCard,
   BarChart3,
   Play,
-  Star,
+  // Star,
   Users,
   Globe,
   Award,
@@ -103,7 +103,7 @@ export default function Home() {
               Welcome to Amazigh Learning
             </h1>
             <div className="text-xl text-gray-600 mb-4 max-w-3xl mx-auto">
-              <p className="mb-4">Hello! Let's start learning with the Amazigh letters:</p>
+              <p className="mb-4">Hello! Let&apos;s start learning with the Amazigh letters:</p>
               <div className="text-3xl md:text-3xl font-bold text-amazigh-blue-500 mb-6 min-h-[55px] flex items-center justify-center">
                 <TypingAnimation
                   text="ⴰ ⴱ ⴳ ⴷ ⴻ ⴼ ⴳ ⵀ ⵉ ⵊ ⴽ ⵍ ⵎ ⵏ ⵓ ⵔ ⵙ ⵜ ⵓ ⵡ ⵅ ⵢ ⵣ"
