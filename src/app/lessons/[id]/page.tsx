@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, CheckCircle, Volume2 } from 'lucide-react';
 
@@ -213,28 +213,91 @@ export default function LessonDetailPage() {
 
           {/* Practice Section */}
           {currentSectionData.type === 'practice' && (() => {
-            const content = currentSectionData.content as { instructions?: string };
+            const content = currentSectionData.content as {
+              instructions?: string;
+              exercises?: { sound: string; options: string[]; correct: string }[];
+            };
+            // Move state up to the component level to avoid re-initialization on every render
+            const [selectedAnswers, setSelectedAnswers] = useState<(string | null)[]>(
+              content.exercises ? Array(content.exercises.length).fill(null) : []
+            );
+            const [showResults, setShowResults] = useState(false);
+
+            // Reset answers and results when section changes
+            useEffect(() => {
+              setSelectedAnswers(content.exercises ? Array(content.exercises.length).fill(null) : []);
+              setShowResults(false);
+            }, [currentSection]);
+
+            const handleSelect = (exerciseIdx: number, option: string) => {
+              if (showResults) return;
+              const updated = [...selectedAnswers];
+              updated[exerciseIdx] = option;
+              setSelectedAnswers(updated);
+            };
+
+            const handleCheck = () => {
+              setShowResults(true);
+            };
+
             return (
               <div className="space-y-6">
                 <p className="text-lg text-gray-700">
                   {content.instructions}
                 </p>
-                <div className="bg-amazigh-blue-50 rounded-lg p-6">
-                  <div className="text-center">
-                    <div className="text-sm text-gray-600 mb-4">Click the letter that makes the sound:</div>
-                    <div className="text-2xl font-bold text-amazigh-blue-600 mb-6">&quot;a&quot;</div>
-                    <div className="flex justify-center space-x-4">
-                      {['ⴰ', 'ⴱ', 'ⴳ'].map((letter, index) => (
-                        <button
-                          key={index}
-                          className="w-16 h-16 bg-white rounded-lg shadow-md hover:shadow-lg transition-all text-2xl font-bold text-amazigh-blue-600 tifinagh-letters"
-                        >
-                          {letter}
-                        </button>
-                      ))}
-                    </div>
+                {content.exercises && content.exercises.length > 0 && (
+                  <div className="space-y-8">
+                    {content.exercises.map((exercise, idx) => (
+                      <div key={idx} className="bg-amazigh-blue-50 rounded-lg p-6">
+                        <div className="text-center">
+                          <div className="text-sm text-gray-600 mb-4">Click the letter that makes the sound:</div>
+                          <div className="text-2xl font-bold text-amazigh-blue-600 mb-6">&quot;{exercise.sound}&quot;</div>
+                          <div className="flex justify-center space-x-4">
+                            {exercise.options.map((letter, optionIdx) => {
+                              const isSelected = selectedAnswers[idx] === letter;
+                              const isCorrect = showResults && letter === exercise.correct;
+                              const isWrong = showResults && isSelected && letter !== exercise.correct;
+                              return (
+                                <button
+                                  key={optionIdx}
+                                  className={`w-16 h-16 bg-white rounded-lg shadow-md hover:shadow-lg transition-all text-2xl font-bold tifinagh-letters
+                                    ${isSelected ? 'ring-2 ring-amazigh-blue-500' : ''}
+                                    ${isCorrect ? 'bg-green-100 border-2 border-green-500' : ''}
+                                    ${isWrong ? 'bg-red-100 border-2 border-red-500' : ''}
+                                  `}
+                                  onClick={() => handleSelect(idx, letter)}
+                                  disabled={showResults}
+                                >
+                                  {letter}
+                                </button>
+                              );
+                            })}
+                          </div>
+                          {showResults && (
+                            <div className="mt-4">
+                              {selectedAnswers[idx] === exercise.correct ? (
+                                <span className="text-green-600 font-semibold">Correct!</span>
+                              ) : (
+                                <span className="text-red-600 font-semibold">Incorrect. Correct answer: {exercise.correct}</span>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                </div>
+                )}
+                {content.exercises && content.exercises.length > 0 && !showResults && (
+                  <div className="flex justify-center">
+                    <button
+                      className="btn-primary px-6 py-2 mt-2"
+                      onClick={handleCheck}
+                      disabled={selectedAnswers.some(ans => ans === null)}
+                    >
+                      Check Answers
+                    </button>
+                  </div>
+                )}
               </div>
             );
           })()}
